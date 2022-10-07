@@ -1,26 +1,38 @@
 const container = document.createElement("div");
-container.classList.add("content")
+container.classList.add("container");
+
+const containerWidth = "1000px";
+const containerHeight = "1000px";
+container.style.width = containerWidth;
+container.style.height = containerHeight;
+
+let side = 50;
 
 createSquares();
 document.body.appendChild(container);
 
+
 function createSquares() {
     container.style.display = "grid";
-    let columns = screen.width/16;
-    container.style.gridTemplateColumns = `repeat(${columns}, 0fr)`;
+    container.style.gridTemplateColumns = `repeat(${side}, 1fr)`;
+    // container.style.gridTemplateRows = (`repeat(${side}, 1fr`);
 
-    for (let column = 0; column < screen.height/16; column++) {
-        
-        for (let row = 0; row < screen.width/16; row++) {
+    for (let column = 0; column < side; column++) {
+        for (let row = 0; row < side; row++) {
             let square = document.createElement("div");
             square.classList.add("square");
             square.style.border = "thin solid gray";
-            square.style.height = "16px";
-            square.style.width = "16px";
+            square.addEventListener("mouseenter", () => square.style.backgroundColor = "black");
             container.appendChild(square);
         }
     }
 }
+
+function changeGrid() {
+    
+}
+
+
 
 function createSquaresByFloatClear() {
     for (let column = 0; column < 16; column++) {
@@ -62,9 +74,9 @@ function createSquaresByInlineBlock() {
 
 function createSquaresByFlexbox() {
     for (let column = 0; column < 16; column++) {
-        let columnElement = document.createElement("div");
-        columnElement.style.display = "flex";
-        columnElement.style.flexDirection = "row";
+        let rowElement = document.createElement("div");
+        rowElement.style.display = "flex";
+        rowElement.style.flexDirection = "row";
         for (let row = 0; row < 16; row++) {
             let square = document.createElement("div");
             square.classList.add("square");
@@ -73,8 +85,8 @@ function createSquaresByFlexbox() {
             square.style.border = "thick solid #0000FF";
             square.style.height = "50px";
             square.style.width = "50px";
-            columnElement.appendChild(square);
-            container.appendChild(columnElement);
+            rowElement.appendChild(square);
+            container.appendChild(rowElement);
         }
     }
 }
@@ -82,8 +94,6 @@ function createSquaresByFlexbox() {
 function createSquaresByCssGrid() {
     container.style.display = "grid";
     container.style.gridTemplateColumns = "repeat(16, 0fr)";
-    // container.style.gap = "0";
-    // container.style.justifyContent = "start";
     for (let column = 0; column < 16; column++) {
         for (let row = 0; row < 16; row++) {
             let square = document.createElement("div");
