@@ -15,4 +15,23 @@ body {
     min-height: 80vh;
 }
 
+#side {
+   width: 500px; 
+}
 
+.contentContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.kitContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.kitElement {
+    height: 50px;
+    width: 50px;
+}

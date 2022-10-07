@@ -1,35 +1,79 @@
-const container = document.createElement("div");
-container.classList.add("container");
+const contentContainer = document.querySelector(".contentContainer");
+
+const gridContainer = document.createElement("div");
+gridContainer.classList.add("container");
 
 const containerWidth = "1000px";
 const containerHeight = "1000px";
-container.style.width = containerWidth;
-container.style.height = containerHeight;
+gridContainer.style.width = containerWidth;
+gridContainer.style.height = containerHeight;
 
-let side = 50;
+const sideValuePara = document.querySelector("#sideValue");
+const sideSelector = document.querySelector("#side");
+sideSelector.oninput = function() {
+    gridSide = getGridSizeFromSelector()
+    sideValuePara.textContent = `${gridSide}x${gridSide}`;
+    gridContainer.innerHTML = "";
+    createGrid();
+}
+let gridSide = getGridSizeFromSelector();
 
-createSquares();
-document.body.appendChild(container);
+let drawColor = "black";
+
+const drawButton = document.querySelector("#drawButton");
+const eraseButton = document.querySelector("#eraseButton");
+const clearButton = document.querySelector("#clearButton");
+const colorPalette = document.querySelector("#colorPalette");
+drawButton.style.backgroundColor = "black";
+eraseButton.style.backgroundColor = "white";
+clearButton.style.backgroundColor = "white";
+colorPalette.style.backgroundColor = "white";
+
+drawButton.addEventListener("click", () => {
+    drawColor = colorPalette.value;
+    drawButton.style.backgroundColor = "black";
+    eraseButton.style.backgroundColor = "white";
+    });
+eraseButton.addEventListener("click", () => {
+    drawButton.style.backgroundColor = "white";
+    eraseButton.style.backgroundColor = "black";
+    drawColor = "white";
+    });
+clearButton.addEventListener("click", () => {
+    gridContainer.innerHTML = "";
+    createGrid()});
+colorPalette.oninput = function() {
+    drawColor = colorPalette.value;
+}
+
+let mousepressed = false;
+document.addEventListener("mousedown", () => mousepressed = true);
+document.addEventListener("mouseup", () => mousepressed = false);
+
+createGrid();
+contentContainer.appendChild(gridContainer);
 
 
-function createSquares() {
-    container.style.display = "grid";
-    container.style.gridTemplateColumns = `repeat(${side}, 1fr)`;
+function createGrid() {
+    gridContainer.style.display = "grid";
+    gridContainer.style.gridTemplateColumns = `repeat(${gridSide}, 1fr)`;
     // container.style.gridTemplateRows = (`repeat(${side}, 1fr`);
 
-    for (let column = 0; column < side; column++) {
-        for (let row = 0; row < side; row++) {
+    for (let column = 0; column < gridSide; column++) {
+        for (let row = 0; row < gridSide; row++) {
             let square = document.createElement("div");
             square.classList.add("square");
             square.style.border = "thin solid gray";
-            square.addEventListener("mouseenter", () => square.style.backgroundColor = "black");
-            container.appendChild(square);
+            square.addEventListener("mouseenter", () => {
+                if(mousepressed)
+                    square.style.backgroundColor = drawColor});
+            gridContainer.appendChild(square);
         }
     }
 }
 
-function changeGrid() {
-    
+function getGridSizeFromSelector() {
+   return sideSelector.value;
 }
 
 
@@ -39,7 +83,7 @@ function createSquaresByFloatClear() {
         if (column !== 0) {
             let emptyDiv = document.createElement("div");
             emptyDiv.style.clear = "both";
-            container.appendChild(emptyDiv);
+            gridContainer.appendChild(emptyDiv);
         }
         for (let row = 0; row < 16; row++) {
             let square = document.createElement("div");
@@ -48,7 +92,7 @@ function createSquaresByFloatClear() {
             square.style.float = "left";
             square.style.height = "50px";
             square.style.width = "50px";
-            container.appendChild(square);
+            gridContainer.appendChild(square);
         }
     }
 }
@@ -57,7 +101,7 @@ function createSquaresByInlineBlock() {
     for (let column = 0; column < 16; column++) {
         if (column !== 0) {
             let emptyDiv = document.createElement("br");
-            container.appendChild(emptyDiv);
+            gridContainer.appendChild(emptyDiv);
         }
         for (let row = 0; row < 16; row++) {
             let square = document.createElement("div");
@@ -66,10 +110,10 @@ function createSquaresByInlineBlock() {
             square.style.border = "thick solid #0000FF";
             square.style.height = "50px";
             square.style.width = "50px";
-            container.appendChild(square);
+            gridContainer.appendChild(square);
         }
     }
-    container.style.fontSize = "0px";
+    gridContainer.style.fontSize = "0px";
 }
 
 function createSquaresByFlexbox() {
@@ -86,14 +130,14 @@ function createSquaresByFlexbox() {
             square.style.height = "50px";
             square.style.width = "50px";
             rowElement.appendChild(square);
-            container.appendChild(rowElement);
+            gridContainer.appendChild(rowElement);
         }
     }
 }
 
 function createSquaresByCssGrid() {
-    container.style.display = "grid";
-    container.style.gridTemplateColumns = "repeat(16, 0fr)";
+    gridContainer.style.display = "grid";
+    gridContainer.style.gridTemplateColumns = "repeat(16, 0fr)";
     for (let column = 0; column < 16; column++) {
         for (let row = 0; row < 16; row++) {
             let square = document.createElement("div");
@@ -101,7 +145,7 @@ function createSquaresByCssGrid() {
             square.style.border = "thick solid #0000FF";
             square.style.height = "50px";
             square.style.width = "50px";
-            container.appendChild(square);
+            gridContainer.appendChild(square);
         }
     }
 }
