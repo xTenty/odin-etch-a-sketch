@@ -17,17 +17,14 @@ sideSelector.oninput = function() {
     createGrid();
 }
 let gridSide = getGridSizeFromSelector();
-
 let drawColor = "black";
+let magicPressed = false;
 
 const drawButton = document.querySelector("#drawButton");
 const eraseButton = document.querySelector("#eraseButton");
 const clearButton = document.querySelector("#clearButton");
 const colorPalette = document.querySelector("#colorPalette");
-drawButton.style.backgroundColor = "black";
-eraseButton.style.backgroundColor = "white";
-clearButton.style.backgroundColor = "white";
-colorPalette.style.backgroundColor = "white";
+const magicButton = document.querySelector("#magicButton");
 
 drawButton.addEventListener("click", () => {
     drawColor = colorPalette.value;
@@ -44,7 +41,25 @@ clearButton.addEventListener("click", () => {
     createGrid()});
 colorPalette.oninput = function() {
     drawColor = colorPalette.value;
+    drawButton.style.backgroundColor = "black";
+    eraseButton.style.backgroundColor = "white";
+    magicPressed = false;
+    magicButton.style.background = "white";
 }
+magicButton.addEventListener("click", () => {
+    if(!magicPressed) {
+        magicPressed = true;
+        magicButton.style.background = "linear-gradient(90deg, "
+        + "rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, " 
+        + "rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, "
+        + "rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, "
+        + "rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)";
+    } else {
+        magicPressed = false;
+        drawColor = colorPalette.value;
+        magicButton.style.background = "white";
+    }
+    });
 
 let mousepressed = false;
 document.addEventListener("mousedown", () => mousepressed = true);
@@ -64,9 +79,25 @@ function createGrid() {
             let square = document.createElement("div");
             square.classList.add("square");
             square.style.border = "thin solid gray";
+            square.style.opacity = 0.1;
             square.addEventListener("mouseenter", () => {
-                if(mousepressed)
-                    square.style.backgroundColor = drawColor});
+                if(mousepressed) {
+                    if(magicPressed) {
+                        let red = Math.floor(Math.random() * 256);
+                        console.log(red);
+                        let green = Math.floor(Math.random() * 256);
+                        console.log(green);
+                        let blue = Math.floor(Math.random() * 256);
+                        console.log(blue);
+                        drawColor = `rgb(${red},${green},${blue})`;
+                    }
+                    square.style.backgroundColor = drawColor;
+                    if(square.style.opacity < 1)
+                        square.style.opacity = parseFloat(square.style.opacity) + 0.3;
+                    if(eraseButton.style.backgroundColor === "black")
+                    square.style.opacity = 0.1;
+                }
+            });
             gridContainer.appendChild(square);
         }
     }
